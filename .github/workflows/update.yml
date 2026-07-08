@@ -1,0 +1,39 @@
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        required: false
+        type: string
+
+env:
+  TAG: ${{ inputs.tag }}
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          git config --global user.name 'monoapp'
+          git config --global user.email 'monoapp@monoapp.com'
+      - name: Update mna version
+        if: "${{ github.event.inputs.tag != '' }}"
+        run: |
+          sed -i "s/version '.*'/version '$TAG'/" ./Formula/mna.rb
+          update_checksum () {
+            checksum=$(curl -sL https://github.com/TarasMazepa/homebrew-monoapp/releases/download/cli-v$TAG/$1.zip | sha256sum | sed 's/  -//')
+            sed -i "s+sha256.*$1+sha256 '$checksum' # $1+" ./Formula/mna.rb
+          }
+          update_checksum "macos-arm"
+          update_checksum "linux-x64"
+          cp ./Formula/mna.rb ./Formula/mna@$TAG.rb
+          CLEAN_TAG="$(echo $TAG | sed 's/[^a-zA-Z0-9]//g')"
+          sed -i "s/class Mna < Formula/class MnaAT$CLEAN_TAG < Formula/" ./Formula/mna@$TAG.rb
+          git add .
+          branch_name=update-mna-to-$TAG-$(date -u +"%Y-%m-%dT%H-%M-%S")
+          git checkout -b $branch_name
+          git commit -m "Update mna to $TAG"
+          git push --set-upstream origin $branch_name
+          gh pr merge $(gh pr create -B main -f) --auto --squash
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
