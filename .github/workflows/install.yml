@@ -1,0 +1,15 @@
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  install:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+    steps:
+      - uses: Homebrew/actions/setup-homebrew@master
+      - run: |
+          brew install TarasMazepa/monoapp/mna
+          mna version
