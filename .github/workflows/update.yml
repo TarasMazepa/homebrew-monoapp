@@ -1,3 +1,4 @@
+name: update.yml
 on:
   workflow_dispatch:
     inputs:
