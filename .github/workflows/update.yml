@@ -24,7 +24,7 @@ jobs:
         run: |
           sed -i "s/version '.*'/version '$TAG'/" ./Formula/mna.rb
           update_checksum () {
-            checksum=$(curl -sL https://github.com/TarasMazepa/homebrew-monoapp/releases/download/cli-v$TAG/$1.zip | sha256sum | sed 's/  -//')
+            checksum=$(curl -sL https://github.com/TarasMazepa/homebrew-monoapp/releases/download/$TAG/$1.zip | sha256sum | sed 's/  -//')
             sed -i "s+sha256.*$1+sha256 '$checksum' # $1+" ./Formula/mna.rb
           }
           update_checksum "macos-arm"
