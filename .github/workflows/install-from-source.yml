@@ -1,0 +1,20 @@
+name: install-from-source.yml
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  install-from-source:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+    steps:
+      - uses: Homebrew/actions/setup-homebrew@master
+      - run: |
+          brew install --build-from-source ./Formula/mna.rb
+          mna version
+        env:
+          HOMEBREW_DEVELOPER: true
