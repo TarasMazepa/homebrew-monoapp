@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
       - run: |
           git config --global user.name 'monoapp'
-          git config --global user.email 'monoapp@monoapp.com'
+          git config --global user.email 'monoapp@themonoapp.com'
       - name: Update mna version
         if: "${{ github.event.inputs.tag != '' }}"
         run: |
