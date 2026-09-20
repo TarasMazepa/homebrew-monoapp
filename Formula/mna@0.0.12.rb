@@ -1,4 +1,4 @@
-class Mna < Formula
+class MnaAT0012 < Formula
   desc "Monoapp command-line application"
   homepage "https://github.com/TarasMazepa/homebrew-monoapp"
   version '0.0.12'
