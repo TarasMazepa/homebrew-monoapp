@@ -1,14 +1,14 @@
 class Mna < Formula
   desc "Monoapp command-line application"
   homepage "https://github.com/TarasMazepa/homebrew-monoapp"
-  version '0.0.17'
+  version '0.0.18'
 
   if OS.mac? && Hardware::CPU.arm?
     url "https://github.com/TarasMazepa/homebrew-monoapp/releases/download/cli-v#{version}/macos-arm.zip"
-    sha256 'e7503acebec3e855375ea7205262a04eb9e744c3b3c06c8cfe9dfdceed8a77cd' # macos-arm
+    sha256 '2c7e42436ddce3c22832c6ffd4229a62b285cf0298e155b99882e69638c101a7' # macos-arm
   elsif OS.linux? && Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
     url "https://github.com/TarasMazepa/homebrew-monoapp/releases/download/cli-v#{version}/linux-x64.zip"
-    sha256 'dff1f7f25c4cc0e0f75438fff8edaccbe395c2e5ca8584211589017c27c61be2' # linux-x64
+    sha256 'e3a6194feccd11f9ef6783a03841e19ea60ef87c1f9f33b3b5d3bd65261210bb' # linux-x64
   end
 
   def install
