@@ -23,19 +23,18 @@ jobs:
       - run: |
           git config --global user.name 'monoapp'
           git config --global user.email 'monoapp@themonoapp.com'
-      - name: Update mna version
-        if: "${{ github.event.inputs.tag != '' }}"
+      - if: "${{ github.event.inputs.tag != '' }}"
         run: |
-          sed -i "s/version '.*'/version '$VERSION'/" ./Formula/mna.rb
+          sed "s/version '.*/version '$VERSION'/" ./mna.rb > ./mna.rb.tmp && mv ./mna.rb.tmp ./mna.rb
           update_checksum () {
-            checksum=$(curl -sL https://github.com/TarasMazepa/homebrew-monoapp/releases/download/$TAG/$1.zip | sha256sum | sed 's/  -//')
-            sed -i "s+sha256.*$1+sha256 '$checksum' # $1+" ./Formula/mna.rb
+            checksum=$(curl -sL "https://github.com/TarasMazepa/homebrew-monoapp/releases/download/$TAG/$1.zip" | shasum -a 256 | awk '{print $1}')
+            sed "s+sha256.*$1+sha256 '$checksum' # $1+" ./mna.rb > ./mna.rb.tmp && mv ./mna.rb.tmp ./mna.rb
           }
           update_checksum "macos-arm"
           update_checksum "linux-x64"
-          cp ./Formula/mna.rb ./Formula/mna@$VERSION.rb
-          CLEAN_TAG="$(echo $VERSION | sed 's/[^a-zA-Z0-9]//g')"
-          sed -i "s/class Mna < Formula/class MnaAT$CLEAN_TAG < Formula/" ./Formula/mna@$VERSION.rb
+          cp ./mna.rb "./mna@$VERSION.rb"
+          CLEAN_TAG="$(echo "$VERSION" | sed 's/[^a-zA-Z0-9]//g')"
+          sed "s/class Mna < Formula/class MnaAT$CLEAN_TAG < Formula/" "./mna@$VERSION.rb" > "./mna@$VERSION.rb.tmp" && mv "./mna@$VERSION.rb.tmp" "./mna@$VERSION.rb"
           git add .
           branch_name=update-mna-to-$VERSION-$(date -u +"%Y-%m-%dT%H-%M-%S")
           git checkout -b $branch_name
