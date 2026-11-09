@@ -14,7 +14,5 @@ jobs:
     steps:
       - uses: Homebrew/actions/setup-homebrew@main
       - run: |
-          brew install --build-from-source ./Formula/mna.rb
+          brew install --build-from-source TarasMazepa/monoapp/mna
           mna version
-        env:
-          HOMEBREW_DEVELOPER: true
